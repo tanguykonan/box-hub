@@ -10,7 +10,6 @@ Official web interface for the **Box** ecosystem. Package registry, user dashboa
 - **Database**: PostgreSQL via Neon + Prisma ORM
 - **Auth**: Auth.js (GitHub OAuth, Google OAuth, OTP email)
 - **Storage**: Cloudflare R2
-- **Payments**: Paystack
 - **Emails**: Resend
 
 ---
@@ -46,3 +45,9 @@ All required variables are documented in [`.env.example`](.env.example).
 
 - Box CLI: [github.com/tanguykonan/box](https://github.com/tanguykonan/box)
 - Android Runner: [github.com/tanguykonan/box-runner](https://github.com/tanguykonan/box-runner)
+
+---
+
+## License
+
+[MIT](LICENSE) © 2026 Tanguy Konan

@@ -300,7 +300,7 @@ export function PublishBoxModal({
                       Glisser l'archive <span className="text-orange-500 font-mono">.box</span>
                     </p>
                     <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
-                      Ou cliquer pour parcourir • Max 60 MB (Gratuit)
+                      Ou cliquer pour parcourir
                     </p>
                   </div>
                 ) : (
@@ -319,11 +319,6 @@ export function PublishBoxModal({
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    {boxFile.size > 62914560 && (
-                      <p className="text-[10px] font-mono text-orange-600 dark:text-orange-400">
-                        ⚠️ Ce fichier dépasse 60 MB. Un palier Sponsor (10 Go), Donateur (30 Go) ou Supporter (100 Go) est requis pour le téléverser.
-                      </p>
-                    )}
                   </div>
                 )}
               </div>

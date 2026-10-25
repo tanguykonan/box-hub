@@ -8,13 +8,11 @@ import {
   Check,
   Save,
   HardDrive,
-  Heart,
   Loader2,
   ExternalLink,
 } from "lucide-react";
 import { GithubIcon } from "../../ui/GithubIcon";
 import { GoogleIcon } from "../../ui/GoogleIcon";
-import { SupportModal } from "../modals/SupportModal";
 import { useSession, signIn } from "next-auth/react";
 import { useToast } from "../../ui/Toast";
 
@@ -27,7 +25,6 @@ export function SettingsSection() {
   const [email, setEmail] = useState(session?.user?.email || "");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [showSupportModal, setShowSupportModal] = useState(false);
   const [tier, setTier] = useState<"free" | "tier_5" | "tier_10" | "tier_20">("free");
   const [storageUsedMB, setStorageUsedMB] = useState(0.0);
   const [storageLimitMB, setStorageLimitMB] = useState(500);
@@ -132,10 +129,10 @@ export function SettingsSection() {
   }, [username, initialUsername]);
 
   const tierBadgeConfig = {
-    free: { label: "Gratuit", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
-    tier_5: { label: "Sponsor 5 €", bg: "bg-pink-600 text-white" },
-    tier_10: { label: "Donateur 10 €", bg: "bg-orange-600 text-white" },
-    tier_20: { label: "Supporter 20 €", bg: "bg-emerald-600 text-white" },
+    free: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_5: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_10: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_20: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -219,15 +216,6 @@ export function SettingsSection() {
               </div>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setShowSupportModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-pink-600 hover:bg-pink-700 px-3.5 py-2 text-xs font-bold text-white transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95"
-          >
-            <Heart className="h-3.5 w-3.5 fill-white text-white" />
-            <span>Soutenir l'infrastructure</span>
-          </button>
         </div>
 
         {/* Storage Bar */}
@@ -382,13 +370,6 @@ export function SettingsSection() {
           </button>
         </div>
       </form>
-
-      {/* Support Modal */}
-      <SupportModal
-        isOpen={showSupportModal}
-        onClose={() => setShowSupportModal(false)}
-      />
-
     </div>
   );
 }

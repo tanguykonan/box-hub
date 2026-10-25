@@ -63,14 +63,11 @@ export async function GET() {
     const discordTriggers = (discordChannel?.triggers as any) || {};
 
     const triggers = {
-      // 1. Financement et Soutiens
-      newDonation: telegramTriggers.newDonation ?? discordTriggers.newDonation ?? true,
-      failedPayment: telegramTriggers.failedPayment ?? discordTriggers.failedPayment ?? true,
-      // 2. Trafic et Santé Système
+      // 1. Trafic et Santé Système
       trafficSpike: telegramTriggers.trafficSpike ?? discordTriggers.trafficSpike ?? true,
       storageSaturation: telegramTriggers.storageSaturation ?? discordTriggers.storageSaturation ?? true,
       systemError: telegramTriggers.systemError ?? discordTriggers.systemError ?? true,
-      // 3. Sécurité et Administration
+      // 2. Sécurité et Administration
       maintenanceToggle: telegramTriggers.maintenanceToggle ?? discordTriggers.maintenanceToggle ?? true,
       adminChanges: telegramTriggers.adminChanges ?? discordTriggers.adminChanges ?? true,
       userModeration: telegramTriggers.userModeration ?? discordTriggers.userModeration ?? true,

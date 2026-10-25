@@ -6,7 +6,6 @@ import {
   Send,
   Check,
   Save,
-  CreditCard,
   Zap,
   Shield,
   Heart,
@@ -70,16 +69,13 @@ export function AdminAlertsSection() {
     }));
   };
 
-  // 2. Realistic Notification Triggers (8 types sur 3 catégories équilibrées)
+  // 2. Realistic Notification Triggers
   const [triggers, setTriggers] = useState({
-    // 1. Financement et Soutiens
-    newDonation: true,
-    failedPayment: true,
-    // 2. Trafic et Santé Système
+    // 1. Trafic et Santé Système
     trafficSpike: true,
     storageSaturation: true,
     systemError: true,
-    // 3. Sécurité et Administration
+    // 2. Sécurité et Administration
     maintenanceToggle: true,
     adminChanges: true,
     userModeration: true,
@@ -433,7 +429,7 @@ export function AdminAlertsSection() {
         </div>
       </div>
 
-      {/* 2. Déclencheurs Réalistes et Essentiels (8 déclencheurs sur 3 catégories) */}
+      {/* 2. Déclencheurs Réalistes et Essentiels */}
       <div className="space-y-4">
         <div className="space-y-1">
           <h3 className="text-base font-bold text-zinc-950 dark:text-white">
@@ -444,55 +440,9 @@ export function AdminAlertsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          {/* Category 1: Financement et Soutiens */}
-          <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 p-5 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
-              <CreditCard className="h-4 w-4 text-pink-500" />
-              <h4 className="text-xs font-bold text-zinc-950 dark:text-white uppercase tracking-wider">
-                Financement et Soutiens
-              </h4>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <label className="flex items-start justify-between gap-3 p-3 rounded-xl border border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/50 cursor-pointer">
-                <div>
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-100 block">
-                    Nouveau Don de Soutien
-                  </span>
-                  <span className="text-[11px] text-zinc-500">
-                    Souscription Sponsor (5€), Donateur (10€) ou Supporter (20€).
-                  </span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={triggers.newDonation}
-                  onChange={(e) => setTriggers({ ...triggers, newDonation: e.target.checked })}
-                  className="h-4 w-4 mt-0.5 rounded text-orange-600 focus:ring-orange-500 shrink-0"
-                />
-              </label>
-
-              <label className="flex items-start justify-between gap-3 p-3 rounded-xl border border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/50 cursor-pointer">
-                <div>
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-100 block">
-                    Échec de Paiement ou Annulation
-                  </span>
-                  <span className="text-[11px] text-zinc-500">
-                    Alerte si un don récurrent n'a pas pu être prélevé.
-                  </span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={triggers.failedPayment}
-                  onChange={(e) => setTriggers({ ...triggers, failedPayment: e.target.checked })}
-                  className="h-4 w-4 mt-0.5 rounded text-orange-600 focus:ring-orange-500 shrink-0"
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* Category 2: Trafic et Santé Système */}
+          {/* Category 1: Trafic et Santé Système */}
           <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 p-5 shadow-xs space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
               <Zap className="h-4 w-4 text-orange-500" />

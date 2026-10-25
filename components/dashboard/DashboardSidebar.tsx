@@ -11,13 +11,11 @@ import {
   BarChart2,
   Settings,
   X,
-  Heart,
   HardDrive,
   LogOut,
   ChevronUp,
 } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
-import { SupportModal } from "./modals/SupportModal";
 import { useSession, signOut } from "next-auth/react";
 import logoImg from "../../public/logo.jpg";
 
@@ -53,7 +51,6 @@ export function DashboardSidebar({
   const currentUsername = session?.user?.username || session?.user?.name || "Développeur";
   const currentEmail = session?.user?.email || "";
 
-  const [showSupportModal, setShowSupportModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userTier, setUserTier] = useState<"free" | "tier_5" | "tier_10" | "tier_20">("free");
   const [storageUsedMB, setStorageUsedMB] = useState(0.0);
@@ -84,10 +81,10 @@ export function DashboardSidebar({
   }, []);
 
   const tierBadgeConfig = {
-    free: { label: "Gratuit", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
-    tier_5: { label: "Sponsor 5 €", bg: "bg-pink-600 text-white" },
-    tier_10: { label: "Donateur 10 €", bg: "bg-orange-600 text-white" },
-    tier_20: { label: "Supporter 20 €", bg: "bg-emerald-600 text-white" },
+    free: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_5: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_10: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
+    tier_20: { label: "500 MB", bg: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black" },
   };
 
   const [imageError, setImageError] = useState(false);
@@ -236,15 +233,6 @@ export function DashboardSidebar({
               <span className="text-[10px] text-zinc-400 font-semibold">
                 {percentage}% consommé
               </span>
-
-              <button
-                type="button"
-                onClick={() => setShowSupportModal(true)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-600 hover:bg-pink-700 text-white text-[10px] font-bold transition-all cursor-pointer shadow-xs"
-              >
-                <Heart className="h-3 w-3 fill-white text-white" />
-                <span>Augmenter</span>
-              </button>
             </div>
           </div>
 
@@ -342,12 +330,6 @@ export function DashboardSidebar({
 
         </div>
       </aside>
-
-      {/* Support et Quota Upgrade Modal */}
-      <SupportModal
-        isOpen={showSupportModal}
-        onClose={() => setShowSupportModal(false)}
-      />
     </>
   );
 }

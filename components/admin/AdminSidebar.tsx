@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-  CreditCard,
   Users,
   BarChart3,
   Bell,
@@ -21,12 +20,6 @@ import { ConfirmModal } from "../ui/ConfirmModal";
 import { useSession, signOut } from "next-auth/react";
 
 export const ADMIN_NAV_ITEMS = [
-  {
-    id: "revenue",
-    label: "Soutiens",
-    icon: CreditCard,
-    desc: "Donateurs et Tiers",
-  },
   {
     id: "users",
     label: "Utilisateurs",

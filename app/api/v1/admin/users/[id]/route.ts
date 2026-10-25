@@ -113,25 +113,13 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       }
     }
 
-    // Déclenchement alerte don / tier
-    if (updateData.tier && updateData.tier !== targetUser.tier && updateData.tier !== UserTier.FREE) {
-      await sendSystemAlert({
-        trigger: "newDonation",
-        category: "Financement",
-        title: "Nouveau Tier de Soutien",
-        message: `Le compte @${targetUser.username} a été configuré au palier ${updateData.tier}. Quota étendu alloué avec succès.`,
-        level: "success",
-        userId: authResult.user.id,
-      });
-    }
-
     // Notification utilisateur lors de la mise à jour de son quota
     if (updateData.tier && updateData.tier !== targetUser.tier) {
       const quotaLabels: Record<UserTier, string> = {
-        [UserTier.FREE]: "500 MB (Palier Gratuit)",
-        [UserTier.TIER_5]: "10 Go (Palier Sponsor)",
-        [UserTier.TIER_10]: "30 Go (Palier Donateur)",
-        [UserTier.TIER_20]: "100 Go (Palier Supporter)",
+        [UserTier.FREE]: "500 MB (Standard)",
+        [UserTier.TIER_5]: "10 Go",
+        [UserTier.TIER_10]: "30 Go",
+        [UserTier.TIER_20]: "100 Go",
       };
       const label = quotaLabels[updateData.tier as UserTier] || "mis à jour";
       createUserNotification({
@@ -140,6 +128,15 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
         message: `Votre quota de stockage est passé à ${label}.`,
         level: "info",
       }).catch(() => {});
+
+      await sendSystemAlert({
+        trigger: "adminChanges",
+        category: "Sécurité",
+        title: "Modification de Quota",
+        message: `Le compte @${targetUser.username} a été configuré avec le quota ${label}.`,
+        level: "info",
+        userId: authResult.user.id,
+      });
     }
 
     return NextResponse.json({

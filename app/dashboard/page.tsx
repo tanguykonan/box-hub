@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DashboardSidebar, DASHBOARD_NAV_ITEMS } from "../../components/dashboard/DashboardSidebar";
 import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
 import { OverviewSection } from "../../components/dashboard/sections/OverviewSection";
@@ -9,37 +9,11 @@ import { TokensSection } from "../../components/dashboard/sections/TokensSection
 import { AnalyticsSection } from "../../components/dashboard/sections/AnalyticsSection";
 import { SettingsSection } from "../../components/dashboard/sections/SettingsSection";
 import { PublishBoxModal } from "../../components/dashboard/modals/PublishBoxModal";
-import { useToast } from "../../components/ui/Toast";
 
 export default function DashboardPage() {
-  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
-
-  // Détection du retour de paiement Paystack
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const payment = params.get("payment");
-      const reference = params.get("reference");
-
-      if (payment === "success") {
-        showToast(
-          reference
-            ? `Paiement validé avec succès (Réf: ${reference.slice(0, 10)}...) ! Votre quota a été mis à jour.`
-            : "Paiement validé avec succès ! Votre quota a été mis à niveau.",
-          "success"
-        );
-        // Nettoyage propre de l'URL sans recharger la page
-        window.history.replaceState({}, "", "/dashboard");
-        window.dispatchEvent(new Event("boxhub_quota_updated"));
-      } else if (payment === "cancelled" || payment === "failed") {
-        showToast("Le paiement a été annulé ou n'a pas pu aboutir.", "error");
-        window.history.replaceState({}, "", "/dashboard");
-      }
-    }
-  }, [showToast]);
 
   const currentTab =
     DASHBOARD_NAV_ITEMS.find((item) => item.id === activeTab) ||

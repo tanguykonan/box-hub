@@ -28,37 +28,37 @@ export const SITE_CONFIG = {
   getInstallCommandWindows: (host?: string) => `irm ${host || SITE_CONFIG.url}/install.ps1 | iex`,
 } as const;
 
+export const STORAGE_LIMIT_MB = 500;
+export const STORAGE_LIMIT_BYTES = BigInt(524288000); // 500 MB
+
 export const STORAGE_QUOTAS = {
   FREE: {
-    totalBytes: BigInt(524288000), // 500 MB
-    totalMB: 500,
-    maxFileBytes: BigInt(62914560), // 60 MB
-    maxFileMB: 60,
-    name: "Gratuit",
+    totalBytes: STORAGE_LIMIT_BYTES,
+    totalMB: STORAGE_LIMIT_MB,
+    maxFileBytes: null,
+    maxFileMB: null,
+    name: "500 MB",
   },
   TIER_5: {
-    totalBytes: BigInt(10737418240), // 10 GB
-    totalGB: 10,
+    totalBytes: STORAGE_LIMIT_BYTES,
+    totalMB: STORAGE_LIMIT_MB,
     maxFileBytes: null,
-    name: "Sponsor",
-    priceEur: "5 € / mois",
-    priceXof: 3000,
+    maxFileMB: null,
+    name: "500 MB",
   },
   TIER_10: {
-    totalBytes: BigInt(32212254720), // 30 GB
-    totalGB: 30,
+    totalBytes: STORAGE_LIMIT_BYTES,
+    totalMB: STORAGE_LIMIT_MB,
     maxFileBytes: null,
-    name: "Donateur",
-    priceEur: "10 € / mois",
-    priceXof: 6500,
+    maxFileMB: null,
+    name: "500 MB",
   },
   TIER_20: {
-    totalBytes: BigInt(107374182400), // 100 GB
-    totalGB: 100,
+    totalBytes: STORAGE_LIMIT_BYTES,
+    totalMB: STORAGE_LIMIT_MB,
     maxFileBytes: null,
-    name: "Supporter",
-    priceEur: "20 € / mois",
-    priceXof: 13000,
+    maxFileMB: null,
+    name: "500 MB",
   },
 } as const;
 

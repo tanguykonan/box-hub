@@ -12,37 +12,6 @@ export interface AdminUser {
   lastLogin: string;
 }
 
-export interface RevenueTierItem {
-  name: string;
-  pricePerMonth: number;
-  subscribersCount: number;
-  monthlyRevenue: number;
-  color: string;
-}
-
-export interface RevenueStats {
-  mrrTotal: number;
-  mrrGrowthPct: number;
-  totalSubscribers: number;
-  activeSubscribers: number;
-  tierDistribution: RevenueTierItem[];
-  monthlyRevenueHistory: {
-    month: string;
-    revenue: number;
-    subscribers: number;
-  }[];
-}
-
-export interface PaymentTransaction {
-  id: string;
-  user: string;
-  email: string;
-  tierName: string;
-  amount: string;
-  date: string;
-  status: "paid" | "refunded";
-}
-
 export interface AdminMember {
   id: string;
   name: string;
@@ -84,15 +53,6 @@ export interface PlatformAnalytics {
   }[];
   categoryDistribution: CategoryDistributionItem[];
   weeklyHistory: DailyMetricPoint[];
-}
-
-export interface PlatformIntegrationSettings {
-  webhookAlertUrl: string;
-  notifyOnPayment: boolean;
-  notifyOnSpike: boolean;
-  notifyOnNewAdmin: boolean;
-  stripeStatus: "operational" | "degraded" | "down";
-  storageClusterStatus: "operational" | "degraded" | "down";
 }
 
 

@@ -1,7 +1,3 @@
-// =============================================================================
-// PRISMA SCHEMA - BOX HUB PLATFORM (REGISTRY ENGINE)
-// =============================================================================
-
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
@@ -12,9 +8,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// -----------------------------------------------------------------------------
-// ENUMS
-// -----------------------------------------------------------------------------
+// Enums
 
 enum Role {
   USER
@@ -51,9 +45,7 @@ enum SubscriptionStatus {
   PAST_DUE
 }
 
-// -----------------------------------------------------------------------------
-// 1. AUTHENTIFICATION & IDENTITÉ (NextAuth / Auth.js + PAT CLI)
-// -----------------------------------------------------------------------------
+// Authentication & Users (NextAuth)
 
 model User {
   id            String        @id @default(uuid())
@@ -147,9 +139,7 @@ model ApiToken {
   @@map("api_tokens")
 }
 
-// -----------------------------------------------------------------------------
-// 2. REGISTRE DES PAQUETS & VERSIONS (.box sur Cloudflare R2)
-// -----------------------------------------------------------------------------
+// Packages & Registry
 
 model Package {
   id             String          @id @default(uuid())
@@ -246,9 +236,7 @@ model PackageWebhook {
   @@map("package_webhooks")
 }
 
-// -----------------------------------------------------------------------------
-// 3. MONÉTISATION DES QUOTAS R2 & SOUTIENS (Stripe / Paystack)
-// -----------------------------------------------------------------------------
+// 3. GESTION DES QUOTAS R2 ET HISTORIQUE
 
 model Subscription {
   id                   String             @id @default(uuid())
@@ -282,9 +270,7 @@ model PaymentTransaction {
   @@map("payment_transactions")
 }
 
-// -----------------------------------------------------------------------------
 // 4. ADMINISTRATION & ÉQUIPE
-// -----------------------------------------------------------------------------
 
 model AdminInvite {
   id        String    @id @default(uuid())
@@ -299,9 +285,7 @@ model AdminInvite {
   @@map("admin_invites")
 }
 
-// -----------------------------------------------------------------------------
 // 5. ALERTES & INTÉGRATIONS EXTERNES (Discord & Telegram)
-// -----------------------------------------------------------------------------
 
 model AlertChannel {
   id          String   @id @default(uuid())
@@ -318,9 +302,7 @@ model AlertChannel {
   @@map("alert_channels")
 }
 
-// -----------------------------------------------------------------------------
 // 6. NOTIFICATIONS, ACTIVITÉ & TÉLÉMÉTRIE DU REGISTRE
-// -----------------------------------------------------------------------------
 
 model Notification {
   id        String   @id @default(uuid())
@@ -365,9 +347,7 @@ model DailyMetric {
   @@map("daily_metrics")
 }
 
-// -----------------------------------------------------------------------------
 // 7. PARAMÈTRES SYSTÈME DU HUB
-// -----------------------------------------------------------------------------
 
 model SystemSetting {
   key         String   @id // ex: "maintenance_mode", "max_package_size_bytes"

@@ -52,10 +52,10 @@ export async function GET() {
     });
 
     const tierNameMap: Record<UserTier, string> = {
-      [UserTier.FREE]: "Gratuit",
-      [UserTier.TIER_5]: "Sponsor 5 €",
-      [UserTier.TIER_10]: "Donateur 10 €",
-      [UserTier.TIER_20]: "Supporter 20 €",
+      [UserTier.FREE]: "500 MB",
+      [UserTier.TIER_5]: "500 MB",
+      [UserTier.TIER_10]: "500 MB",
+      [UserTier.TIER_20]: "500 MB",
     };
 
     const tierKeyMap: Record<UserTier, "free" | "tier_5" | "tier_10" | "tier_20"> = {

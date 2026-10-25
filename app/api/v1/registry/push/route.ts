@@ -4,7 +4,6 @@ import { prisma } from "@/lib/db";
 import { PackageCategory, RuntimeType } from "@prisma/client";
 import { createUserNotification } from "@/lib/notifications";
 import { uploadToR2 } from "@/lib/r2";
-import { STORAGE_QUOTAS } from "@/lib/site-config";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -136,18 +135,6 @@ export async function POST(req: Request) {
       BigInt(0)
     );
 
-    // Vérification de la limite par fichier pour le Tier Gratuit (60 MB max par archive .box)
-    if (user.tier === "FREE" && STORAGE_QUOTAS.FREE.maxFileBytes && fileSizeBytes > STORAGE_QUOTAS.FREE.maxFileBytes) {
-      const fileMB = (Number(fileSizeBytes) / (1024 * 1024)).toFixed(1);
-      return NextResponse.json(
-        {
-          success: false,
-          error: `Le palier Gratuit limite la taille maximale à ${STORAGE_QUOTAS.FREE.maxFileMB} MB par archive .box (${fileMB} MB détectés). Passez au palier Sponsor (10 Go), Donateur (30 Go) ou Supporter (100 Go) pour lever toute contrainte.`,
-        },
-        { status: 413 }
-      );
-    }
-
     if (currentUsedBytes + fileSizeBytes > user.quotaBytes) {
       const quotaMB = Math.round(Number(user.quotaBytes) / (1024 * 1024));
       const usedMB = (Number(currentUsedBytes) / (1024 * 1024)).toFixed(1);
@@ -164,7 +151,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: `Quota de stockage dépassé (${usedMB} MB utilisés sur ${quotaMB} MB alloués à votre tier).`,
+          error: `Quota de stockage dépassé (${usedMB} MB utilisés sur ${quotaMB} MB alloués).`,
         },
         { status: 413 }
       );

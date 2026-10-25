@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/db";
 
 export type AlertTriggerType =
-  | "newDonation"
-  | "failedPayment"
   | "trafficSpike"
   | "storageSaturation"
   | "systemError"

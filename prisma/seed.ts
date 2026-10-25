@@ -35,9 +35,7 @@ async function main() {
 
   console.log("🧹 Toutes les tables ont été nettoyées.");
 
-  // =========================================================================
   // 2. PARAMÈTRES SYSTÈME DU HUB
-  // =========================================================================
 
   await prisma.systemSetting.createMany({
     data: [
@@ -59,9 +57,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 3. UTILISATEURS DU REGISTRE
-  // =========================================================================
 
   const adminUser = await prisma.user.create({
     data: {
@@ -137,9 +133,7 @@ async function main() {
     },
   });
 
-  // =========================================================================
   // 4. COMPTES OAUTH (NextAuth) & JETONS CLI (PAT)
-  // =========================================================================
 
   await prisma.account.create({
     data: {
@@ -174,9 +168,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 5. PAQUETS, VERSIONS & METADONNÉES
-  // =========================================================================
 
   // Paquet 1 : Discord Bot (Alex)
   const discordBot = await prisma.package.create({
@@ -377,9 +369,7 @@ async function main() {
     },
   });
 
-  // =========================================================================
   // 6. COLLABORATIONS, WEBHOOKS & ÉTOILES
-  // =========================================================================
 
   await prisma.packageCollaborator.create({
     data: {
@@ -411,9 +401,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 7. ABONNEMENTS & TRANSACTIONS (Monétisation R2)
-  // =========================================================================
 
   await prisma.subscription.createMany({
     data: [
@@ -479,9 +467,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 8. ÉQUIPE D'ADMINISTRATION & ALERTES
-  // =========================================================================
 
   await prisma.adminInvite.create({
     data: {
@@ -514,9 +500,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 9. NOTIFICATIONS & JOURNAL D'AUDIT DU REGISTRE
-  // =========================================================================
 
   await prisma.notification.createMany({
     data: [
@@ -575,9 +559,7 @@ async function main() {
     ],
   });
 
-  // =========================================================================
   // 10. TÉLÉMÉTRIE QUOTIDIENNE (Historique 7 jours)
-  // =========================================================================
 
   const today = new Date();
   const dailyPoints = [

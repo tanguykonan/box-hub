@@ -8,8 +8,6 @@ import {
   UserX,
   Trash2,
   Check,
-  Heart,
-  Sliders,
   X,
   HardDrive,
   Loader2,
@@ -21,13 +19,9 @@ export function AdminUsersSection() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "donators" | "free" | "suspended">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "suspended">("all");
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  // Modal for tier & quota adjustment
-  const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
-  const [selectedTier, setSelectedTier] = useState<"free" | "tier_5" | "tier_10" | "tier_20">("free");
-  
   // Modal for user deletion confirmation
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
 
@@ -106,62 +100,6 @@ export function AdminUsersSection() {
     }
   };
 
-  const handleOpenEditTier = (user: AdminUser) => {
-    setEditingUser(user);
-    setSelectedTier(user.tier);
-  };
-
-  const handleSaveTier = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingUser) return;
-    const target = editingUser;
-
-    const tierLimitMap = {
-      free: 500,
-      tier_5: 10000,
-      tier_10: 30000,
-      tier_20: 100000,
-    };
-
-    const tierNameMap = {
-      free: "Gratuit",
-      tier_5: "Sponsor 5 €",
-      tier_10: "Donateur 10 €",
-      tier_20: "Supporter 20 €",
-    };
-
-    try {
-      const res = await fetch(`/api/v1/admin/users/${target.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier: selectedTier }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setUsers((prev) =>
-          prev.map((u) => {
-            if (u.id === target.id) {
-              return {
-                ...u,
-                tier: selectedTier,
-                tierName: tierNameMap[selectedTier],
-                storageLimitMB: tierLimitMap[selectedTier],
-              };
-            }
-            return u;
-          })
-        );
-        showNotification(`Quota et statut de soutien de ${target.username} mis à jour (${tierNameMap[selectedTier]}).`);
-      } else {
-        showNotification(data.message || "Erreur lors de la modification du quota.");
-      }
-    } catch {
-      showNotification("Erreur de connexion lors de la mise à jour.");
-    } finally {
-      setEditingUser(null);
-    }
-  };
-
   const filteredUsers = users.filter((u) => {
     const matchesSearch =
       u.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -170,8 +108,7 @@ export function AdminUsersSection() {
     if (!matchesSearch) return false;
 
     if (statusFilter === "all") return true;
-    if (statusFilter === "donators") return u.tier !== "free";
-    if (statusFilter === "free") return u.tier === "free";
+    if (statusFilter === "active") return u.status !== "suspended";
     if (statusFilter === "suspended") return u.status === "suspended";
     return true;
   });
@@ -215,24 +152,14 @@ export function AdminUsersSection() {
             Tous ({users.length})
           </button>
           <button
-            onClick={() => setStatusFilter("donators")}
+            onClick={() => setStatusFilter("active")}
             className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 ${
-              statusFilter === "donators"
+              statusFilter === "active"
                 ? "bg-white dark:bg-black text-zinc-950 dark:text-white font-semibold shadow-xs"
                 : "text-zinc-500 hover:text-zinc-950 dark:hover:text-white font-medium"
             }`}
           >
-            Donateurs ({users.filter((u) => u.tier !== "free").length})
-          </button>
-          <button
-            onClick={() => setStatusFilter("free")}
-            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 ${
-              statusFilter === "free"
-                ? "bg-white dark:bg-black text-zinc-950 dark:text-white font-semibold shadow-xs"
-                : "text-zinc-500 hover:text-zinc-950 dark:hover:text-white font-medium"
-            }`}
-          >
-            Gratuits ({users.filter((u) => u.tier === "free").length})
+            Actifs ({users.filter((u) => u.status !== "suspended").length})
           </button>
           <button
             onClick={() => setStatusFilter("suspended")}
@@ -255,7 +182,7 @@ export function AdminUsersSection() {
             <thead>
               <tr className="border-b border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">
                 <th className="py-3.5 px-4 whitespace-nowrap">Développeur</th>
-                <th className="py-3.5 px-4 whitespace-nowrap">Soutien / Tier</th>
+                <th className="py-3.5 px-4 whitespace-nowrap">Quota</th>
                 <th className="py-3.5 px-4 whitespace-nowrap">Boxes</th>
                 <th className="py-3.5 px-4 whitespace-nowrap">Stockage Consommé</th>
                 <th className="py-3.5 px-4 whitespace-nowrap">Statut</th>
@@ -315,18 +242,8 @@ export function AdminUsersSection() {
                     </td>
 
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded text-[10px] font-bold whitespace-nowrap ${
-                          user.tier === "tier_20"
-                            ? "bg-emerald-600 text-white"
-                            : user.tier === "tier_10"
-                            ? "bg-orange-600 text-white"
-                            : user.tier === "tier_5"
-                            ? "bg-pink-600 text-white"
-                            : "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black"
-                        }`}
-                      >
-                        {user.tierName}
+                      <span className="inline-flex items-center px-2.5 py-1 rounded text-[10px] font-bold whitespace-nowrap bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black">
+                        500 MB
                       </span>
                     </td>
 
@@ -337,12 +254,12 @@ export function AdminUsersSection() {
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className="space-y-1.5 w-36">
                         <span className="text-zinc-700 dark:text-zinc-300 block text-[11px] font-medium whitespace-nowrap">
-                          {user.storageUsedMB} MB / {user.storageLimitMB >= 1000 ? `${user.storageLimitMB / 1000} GB` : `${user.storageLimitMB} MB`}
+                          {user.storageUsedMB} MB / 500 MB
                         </span>
                         <div className="h-1.5 w-full rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
                           <div
                             className="h-full rounded-full bg-orange-500"
-                            style={{ width: `${Math.min(100, Math.round((user.storageUsedMB / user.storageLimitMB) * 100))}%` }}
+                            style={{ width: `${Math.min(100, Math.round((user.storageUsedMB / 500) * 100))}%` }}
                           />
                         </div>
                       </div>
@@ -371,16 +288,6 @@ export function AdminUsersSection() {
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
                         
-                        {/* Adjust Tier / Quota */}
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEditTier(user)}
-                          className="p-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-orange-500 hover:border-orange-500 transition-all cursor-pointer"
-                          title="Ajuster le quota de stockage / Tier"
-                        >
-                          <Sliders className="h-3.5 w-3.5" />
-                        </button>
-
                         {/* Toggle Suspend/Active */}
                         <button
                           type="button"
@@ -418,87 +325,6 @@ export function AdminUsersSection() {
           </table>
         </div>
       </div>
-
-      {/* Edit Quota / Tier Modal */}
-      {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 p-6 shadow-xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/5">
-              <div className="flex items-center gap-2">
-                <HardDrive className="h-4 w-4 text-orange-500" />
-                <h3 className="text-sm font-bold text-zinc-950 dark:text-white">
-                  Ajuster le Quota : {editingUser.username}
-                </h3>
-              </div>
-              <button
-                onClick={() => setEditingUser(null)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-950 dark:hover:text-white cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveTier} className="space-y-4 text-xs">
-              
-              <div className="space-y-1.5">
-                <label className="text-zinc-700 dark:text-zinc-300 font-semibold block">
-                  Attribution du Tier de Soutien & Quota Stockage
-                </label>
-                
-                <div className="space-y-2 pt-1">
-                  {[
-                    { id: "free", name: "Tier Gratuit de base", storage: "500 MB de stockage" },
-                    { id: "tier_5", name: "Sponsor 5 €", storage: "10 Go de stockage" },
-                    { id: "tier_10", name: "Donateur 10 €", storage: "30 Go de stockage" },
-                    { id: "tier_20", name: "Supporter 20 €", storage: "100 Go de stockage" },
-                  ].map((t) => (
-                    <label
-                      key={t.id}
-                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
-                        selectedTier === t.id
-                          ? "border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400 font-semibold"
-                          : "border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <input
-                          type="radio"
-                          name="tier_select"
-                          value={t.id}
-                          checked={selectedTier === t.id}
-                          onChange={() => setSelectedTier(t.id as any)}
-                          className="text-orange-600 focus:ring-orange-500"
-                        />
-                        <span className="font-medium">{t.name}</span>
-                      </div>
-                      <span className="text-[11px] text-zinc-500">{t.storage}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setEditingUser(null)}
-                  className="px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white cursor-pointer font-medium"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-semibold cursor-pointer transition-all"
-                >
-                  Appliquer le quota
-                </button>
-              </div>
-
-            </form>
-
-          </div>
-        </div>
-      )}
 
       {/* Modern Confirmation Modal for User Deletion */}
       <ConfirmModal

@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { AdminSidebar, ADMIN_NAV_ITEMS } from "../../components/admin/AdminSidebar";
 import { AdminHeader } from "../../components/admin/AdminHeader";
-import { AdminRevenueSection } from "../../components/admin/sections/AdminRevenueSection";
 import { AdminUsersSection } from "../../components/admin/sections/AdminUsersSection";
 import { AdminAnalyticsSection } from "../../components/admin/sections/AdminAnalyticsSection";
 import { AdminAlertsSection } from "../../components/admin/sections/AdminAlertsSection";
@@ -15,7 +14,7 @@ import { AdminTeamSection } from "../../components/admin/sections/AdminTeamSecti
 export default function AdminPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [activeTab, setActiveTab] = useState("revenue");
+  const [activeTab, setActiveTab] = useState("users");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -71,8 +70,6 @@ export default function AdminPage() {
 
         {/* Dynamic Section Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          {activeTab === "revenue" && <AdminRevenueSection />}
-
           {activeTab === "users" && <AdminUsersSection />}
 
           {activeTab === "analytics" && <AdminAnalyticsSection />}

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { auth } from "../../../../../lib/auth";
 import { prisma } from "../../../../../lib/db";
 import { PackageCategory, RuntimeType } from "@prisma/client";
-import { STORAGE_QUOTAS } from "@/lib/site-config";
 
 function formatBytes(bytes: bigint | number): string {
   const num = typeof bytes === "bigint" ? Number(bytes) : bytes;
@@ -166,16 +165,6 @@ export async function POST(req: Request) {
     }
 
     const requestedSizeBytes = BigInt(fileSizeBytes);
-
-    if (dbUser.tier === "FREE" && STORAGE_QUOTAS.FREE.maxFileBytes && requestedSizeBytes > STORAGE_QUOTAS.FREE.maxFileBytes) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Le palier Gratuit limite la taille d'une archive à ${STORAGE_QUOTAS.FREE.maxFileMB} MB. Passez au palier Sponsor, Donateur ou Supporter pour lever cette contrainte.`,
-        },
-        { status: 413 }
-      );
-    }
 
     // Mapping enum catégorie
     const catEnum =
